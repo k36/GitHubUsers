@@ -8,11 +8,18 @@
 import Foundation
 import Combine
 
-protocol UserDetailsViewDataProviding {
-    var hasLoadedAllRepos: Bool { get }
-    func fetchUserInfo(forUser userName: String) async throws -> UserInfo?
-    func loadGitRepos(forUser userName: String, fromPage pageIndex: Int) async throws -> [UserRepositories]?
+protocol UserDetailsViewState: ObservableObject {
+    var userInfo: UserInfo? { get }
+    var repos: [UserRepositories] { get }
+    var lastRepoId: Int? { get }
+    var isLoadingRepos: Bool { get }
 }
+
+protocol UserDetailsViewListner {
+    func loadGitRepos()
+}
+
+typealias UserInfoViewModelProtocol = UserDetailsViewState & UserDetailsViewListner
 
 final class UserDetailsViewModel: UserInfoViewModelProtocol {
     

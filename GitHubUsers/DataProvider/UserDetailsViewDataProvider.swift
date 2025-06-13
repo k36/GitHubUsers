@@ -7,6 +7,12 @@
 
 import Foundation
 
+protocol UserDetailsViewDataProviding {
+    var hasLoadedAllRepos: Bool { get }
+    func fetchUserInfo(forUser userName: String) async throws -> UserInfo?
+    func loadGitRepos(forUser userName: String, fromPage pageIndex: Int) async throws -> [UserRepositories]?
+}
+
 final class UserDetailsViewDataProvider: UserDetailsViewDataProviding {
     
     private enum Constant {

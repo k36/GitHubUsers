@@ -8,11 +8,19 @@
 import Combine
 import Foundation
 
-protocol UserListViewDataProviding {
-    var hasLoadedAllUsers: Bool { get }
-    func loadGitHubUsers(index: Int?) async throws -> [User]
-    func searchUsers(with name: String) async throws -> [User]
+protocol UserListViewState: ObservableObject {
+    var users: [User] { get }
+    var lastUserId: Int? { get }
+    var isLoading: Bool { get }
 }
+
+protocol UserListViewListner {
+    func loadGitHubUsers()
+    func searchUsers(with name: String)
+    func dismissSearchUsers()
+}
+
+typealias UserListViewModelProtocol = UserListViewState & UserListViewListner
 
 final class UserListViewModel: UserListViewModelProtocol {
     

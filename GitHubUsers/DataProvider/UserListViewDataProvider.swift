@@ -5,6 +5,12 @@
 //  Created by Bhalodiya, Keyur | ECMPD on 2025/06/13.
 //
 
+protocol UserListViewDataProviding {
+    var hasLoadedAllUsers: Bool { get }
+    func loadGitHubUsers(index: Int?) async throws -> [User]
+    func searchUsers(with name: String) async throws -> [User]
+}
+
 final class UserListViewDataProvider: UserListViewDataProviding {
     
     private enum Constant {

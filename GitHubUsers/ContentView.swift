@@ -8,14 +8,29 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var isLoading: Bool = false
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            UserListView(viewModel: UserListViewModel(dataProvider: UserListViewDataProvider()))
         }
-        .padding()
+        .environment(\.isLoading, $isLoading)
+        .hudOverlay(isLoading)
+    }
+}
+
+struct LoadingEnvironmentKey: EnvironmentKey {
+    public static let defaultValue: Binding<Bool> = .constant(false)
+}
+
+extension EnvironmentValues {
+    var isLoading: Binding<Bool> {
+        get {
+            self [LoadingEnvironmentKey.self]
+        }
+        set {
+            self [LoadingEnvironmentKey.self] = newValue
+        }
     }
 }
 

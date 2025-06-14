@@ -16,7 +16,8 @@ protocol UserDetailsViewState: ObservableObject {
 }
 
 protocol UserDetailsViewListner {
-    func loadGitRepos()
+    func loadUserInfo() async
+    func loadGitRepos() async
 }
 
 typealias UserInfoViewModelProtocol = UserDetailsViewState & UserDetailsViewListner
@@ -43,36 +44,31 @@ final class UserDetailsViewModel: UserInfoViewModelProtocol {
     init(loginUsername: String, dataProvider: UserDetailsViewDataProviding) {
         self.loginUsername = loginUsername
         self.dataProvider = dataProvider
-        fetchUserInfo()
-    }
-    
-    private func fetchUserInfo() {
-        Task {
-            do {
-                self.userInfo = try await self.dataProvider.fetchUserInfo(forUser: loginUsername)
-            } catch {
-                
-            }
-        }
     }
 }
 
 // MARK: UserDetailsViewListner
 
 extension UserDetailsViewModel {
-    func loadGitRepos() {
+    
+    func loadUserInfo() async {
+        do {
+            self.userInfo = try await self.dataProvider.fetchUserInfo(forUser: loginUsername)
+        } catch { }
+        
+    }
+    
+    func loadGitRepos() async {
         guard !isLoadingRepos, !dataProvider.hasLoadedAllRepos else { return }
         self.isLoadingRepos = true
         self.page += 1
-        Task {
-            defer {
-                self.isLoadingRepos = false
-            }
-            
-            do {
-                let repos = try await self.dataProvider.loadGitRepos(forUser: loginUsername, fromPage: page)
-                self.repos.append(contentsOf: repos ?? [])
-            } catch { }
+        defer {
+            self.isLoadingRepos = false
         }
+        
+        do {
+            let repos = try await self.dataProvider.loadGitRepos(forUser: loginUsername, fromPage: page)
+            self.repos.append(contentsOf: repos ?? [])
+        } catch { }
     }
 }

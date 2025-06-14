@@ -31,7 +31,9 @@ struct UserDetailsView<ViewModel: UserInfoViewModelProtocol>: View {
                 isLoading.wrappedValue = newValue
             }
             .onAppear {
-                viewModel.loadGitRepos()
+                Task {
+                    await viewModel.loadGitRepos()
+                }
             }
     }
     
@@ -117,7 +119,10 @@ struct UserDetailsView<ViewModel: UserInfoViewModelProtocol>: View {
             .contentShape(Rectangle())
             .onAppear {
                 guard repo.id == viewModel.lastRepoId else { return }
-                viewModel.loadGitRepos()
+                Task {
+                    await viewModel.loadUserInfo()
+                    await viewModel.loadGitRepos()
+                }
             }
             .onTapGesture {
                 didTapped.send(repo.htmlURL)
@@ -136,7 +141,8 @@ private final class UserDetailsViewModelMock: UserInfoViewModelProtocol {
     var userInfo: UserInfo? = UserInfo(login: "bhalodiya", id: 1, htmlURL: nil, name: "Bhalodiya Keyur", avatarURL: "https://avatars.githubusercontent.com/u/1?v=4", location: "Japan", followers: 123, following: 456)
     var repos: [UserRepositories] = [UserRepositories(id: 1, name: "chronic", htmlURL: "https://github.com/mojombo/30daysoflaptops.github.io", description: "Chronic is a pure Ruby natural language date parser.", language: "Swift", starCount: 36)]
     
-    func loadGitRepos() { }
+    func loadUserInfo() async { }
+    func loadGitRepos() async { }
 }
 
 #Preview {

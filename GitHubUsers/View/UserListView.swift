@@ -39,8 +39,10 @@ struct UserListView<ViewModel: UserListViewModelProtocol>: View {
             }
             .onAppear {
                 guard isFirstLoad else { return }
-                viewModel.loadGitHubUsers()
-                self.isFirstLoad = false
+                Task {
+                    await viewModel.loadGitHubUsers()
+                    self.isFirstLoad = false
+                }
             }
     }
     
@@ -60,7 +62,9 @@ struct UserListView<ViewModel: UserListViewModelProtocol>: View {
             .contentShape(Rectangle())
             .onAppear {
                 guard user.id == viewModel.lastUserId else { return }
-                viewModel.loadGitHubUsers()
+                Task {
+                    await viewModel.loadGitHubUsers()
+                }
             }
             .onTapGesture {
                 didClickUser.send(user)

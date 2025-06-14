@@ -15,7 +15,7 @@ protocol UserListViewState: ObservableObject {
 }
 
 protocol UserListViewListner {
-    func loadGitHubUsers()
+    func loadGitHubUsers() async
     func searchUsers(with name: String)
     func dismissSearchUsers()
 }
@@ -78,22 +78,19 @@ final class UserListViewModel: UserListViewModelProtocol {
 
 extension UserListViewModel {
     
-    func loadGitHubUsers() {
+    func loadGitHubUsers() async {
         guard !isLoading, !dataProvider.hasLoadedAllUsers, !isSearching else { return }
         self.isLoading = true
-        Task {
-            do {
-                let users: [User] = try await self.dataProvider.loadGitHubUsers(index: self.lastUserId)
-                self.users.append(contentsOf: users)
-            } catch {
-                
-            }
-            self.isLoading = false
-        }
+        do {
+            let users: [User] = try await self.dataProvider.loadGitHubUsers(index: self.lastUserId)
+            self.users.append(contentsOf: users)
+            self.usersCache = self.users
+        } catch { }
+        self.isLoading = false
     }
     
     func searchUsers(with name: String) {
-        guard name.count != 0 else {
+        guard name.count > 0 else {
             cancelSearch()
             return
         }

@@ -78,6 +78,7 @@ final class UserListViewModel: UserListViewModelProtocol {
 
 extension UserListViewModel {
     
+    @MainActor
     func loadGitHubUsers() async {
         guard !isLoading, !dataProvider.hasLoadedAllUsers, !isSearching else { return }
         self.isLoading = true

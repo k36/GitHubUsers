@@ -15,8 +15,7 @@ struct UserListView<ViewModel: UserListViewModelProtocol>: View {
     @State private var searchText = ""
     @State private var isFirstLoad = true
     @Environment(\.isLoading) private var isLoading
-    
-    let didClickUser = PassthroughSubject<User, Never>()
+    @State private var selectedUser: User? = nil
     
     public init(viewModel: ViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel)
@@ -44,6 +43,14 @@ struct UserListView<ViewModel: UserListViewModelProtocol>: View {
                     self.isFirstLoad = false
                 }
             }
+            .sheet(item: $selectedUser) { user in
+                UserDetailsView(
+                    viewModel: UserDetailsViewModel(
+                        loginUsername: user.login ?? "",
+                        dataProvider: UserDetailsViewDataProvider()
+                    )
+                )
+            }
     }
     
     
@@ -67,7 +74,7 @@ struct UserListView<ViewModel: UserListViewModelProtocol>: View {
                 }
             }
             .onTapGesture {
-                didClickUser.send(user)
+                selectedUser = user
             }
         }
     }

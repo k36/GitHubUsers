@@ -51,6 +51,7 @@ final class UserDetailsViewModel: UserInfoViewModelProtocol {
 
 extension UserDetailsViewModel {
     
+    @MainActor
     func loadUserInfo() async {
         do {
             self.userInfo = try await self.dataProvider.fetchUserInfo(forUser: loginUsername)
@@ -58,6 +59,7 @@ extension UserDetailsViewModel {
         
     }
     
+    @MainActor
     func loadGitRepos() async {
         guard !isLoadingRepos, !dataProvider.hasLoadedAllRepos else { return }
         self.isLoadingRepos = true

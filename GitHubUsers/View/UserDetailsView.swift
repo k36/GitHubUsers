@@ -32,6 +32,7 @@ struct UserDetailsView<ViewModel: UserInfoViewModelProtocol>: View {
             }
             .onAppear {
                 Task {
+                    await viewModel.loadUserInfo()
                     await viewModel.loadGitRepos()
                 }
             }
@@ -120,7 +121,6 @@ struct UserDetailsView<ViewModel: UserInfoViewModelProtocol>: View {
             .onAppear {
                 guard repo.id == viewModel.lastRepoId else { return }
                 Task {
-                    await viewModel.loadUserInfo()
                     await viewModel.loadGitRepos()
                 }
             }

@@ -14,7 +14,7 @@ struct UserDetailsView<ViewModel: UserInfoViewModelProtocol>: View {
     @StateObject private var viewModel: ViewModel
     @Environment(\.isLoading) private var isLoading
     
-    let didTapped = PassthroughSubject<String?, Never>()
+    @StateObject private var linkCoordinator = LinkCoordinator()
     
     public init(viewModel: ViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel)
@@ -39,7 +39,7 @@ struct UserDetailsView<ViewModel: UserInfoViewModelProtocol>: View {
     }
     
     @ViewBuilder
-    var headerViewContent: some View {
+    private var headerViewContent: some View {
         HStack(spacing: 20) {
             WebImage(url: URL(string: viewModel.userInfo?.avatarURL ?? ""))
                 .resizable()
@@ -51,7 +51,7 @@ struct UserDetailsView<ViewModel: UserInfoViewModelProtocol>: View {
                 Text("@\(viewModel.userInfo?.login ?? "")")
                     .foregroundStyle(.blue)
                     .onTapGesture {
-                        didTapped.send(viewModel.userInfo?.htmlURL)
+                        linkCoordinator.didTapURL.send(viewModel.userInfo?.htmlURL)
                     }
             }
             .frame(height: 50)
@@ -62,7 +62,7 @@ struct UserDetailsView<ViewModel: UserInfoViewModelProtocol>: View {
     }
     
     @ViewBuilder
-    var userConnectionViewContent: some View {
+    private var userConnectionViewContent: some View {
         HStack(spacing: 20) {
             VStack(alignment: .center) {
                 Text("\(viewModel.userInfo?.followers ?? 0)")
@@ -98,7 +98,7 @@ struct UserDetailsView<ViewModel: UserInfoViewModelProtocol>: View {
     }
     
     @ViewBuilder
-    var repoListViewContent: some View {
+    private var repoListViewContent: some View {
         List(viewModel.repos, id: \.self) { repo in
             VStack(alignment: .leading, spacing: 5) {
                 HStack {
@@ -125,7 +125,7 @@ struct UserDetailsView<ViewModel: UserInfoViewModelProtocol>: View {
                 }
             }
             .onTapGesture {
-                didTapped.send(repo.htmlURL)
+                linkCoordinator.didTapURL.send(repo.htmlURL)
             }
         }
         .listStyle(.plain)

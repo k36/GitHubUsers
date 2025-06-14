@@ -55,7 +55,7 @@ struct UserListView<ViewModel: UserListViewModelProtocol>: View {
     
     
     @ViewBuilder
-    var rowContent: some View {
+    private var rowContent: some View {
         List(viewModel.users, id: \.self) { user in
             HStack {
                 WebImage(url: URL(string: user.avatarURL ?? ""))

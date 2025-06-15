@@ -33,3 +33,16 @@ From the details screen, users can open the GitHub profile or any repository in 
 [GitHub User Info](https://docs.github.com/en/rest/users/users?apiVersion=2022-11-28#get-a-user)
 
 [GitHub User Repositories ](https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#list-repositories-for-a-user)
+
+
+# User details and repositories 
+![3](https://github.com/user-attachments/assets/2c0b4d44-730e-4996-b5ec-7427daad7dd3)
+
+# User list
+![1](https://github.com/user-attachments/assets/9367ec79-2b4a-4d3b-b3a2-c1c231726082)
+
+# User search
+![2](https://github.com/user-attachments/assets/f6b9c7f2-903d-4c08-bee5-472fbc8297dd)
+
+
+
